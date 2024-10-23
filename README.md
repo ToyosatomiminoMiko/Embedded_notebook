@@ -179,7 +179,7 @@ while (1) {
     i++;
 }
 ```
-*Copyright (c) 1990 The Regents of the University of California.*
+*The Regents of the University of California.*
 加州大学董事会
 
 *temperature* 温度
