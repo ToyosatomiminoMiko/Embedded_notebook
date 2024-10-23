@@ -1,5 +1,5 @@
 # 开始之前
-这个笔记本因为不小心的误操作清除了内容,但通过VScode的本地历史记录恢复了,故避免以后再次出现此类情况,现公开该笔记本(2024.10.24.03.53.41)
+这个笔记本因为不小心的误操作清除了内容,但通过VScode的本地历史记录恢复了,故避免以后再次出现此类情况,现公开该笔记本(2024.10.24.03:53:41)
 FPAG 制造商:
 - intel/Altera
 - AMD/Xilinx
@@ -149,8 +149,10 @@ htimx.Instance->CNT
 ```c
 HAL_TIM_Encoder_Start(&htim, TIM_CHANNEL_ALL);
 ```
-
-
+获取编码器值
+```c
+__HAL_TIM_GET_COUNTER(&htim1);
+```
 ### UART:
 - `USART1`: host
 - `USART2`: RS485
@@ -611,3 +613,6 @@ sprintf(s_time, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
 hex:
 `59` = `0x3b`
 `23` = `0x17`
+
+
+
