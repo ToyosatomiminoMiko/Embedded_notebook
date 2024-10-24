@@ -1,11 +1,8 @@
-# 开始之前
 这个笔记本因为不小心的误操作清除了内容,但通过VScode的本地历史记录恢复了,故避免以后再次出现此类情况,现公开该笔记本(2024.10.24.03:53:41)
-
-FPAG 制造商:
+##### FPAG 制造商
 - intel/Altera
 - AMD/Xilinx
-
-MCU 制造商:
+##### MCU 制造商
 - STMicroelectronics
 - Texas Instruments
 # `STM32F103ZET6`
@@ -47,6 +44,9 @@ MCU 制造商:
 ### BSP
 **board support package**
 板级支持包
+### IRQ
+**Interrupt Request**
+中断请求
 
 ## § 0x01 CubeIDE 疑难解答
 微软输入法繁简切换`Ctrl`+`Shift`+`F`
@@ -230,9 +230,14 @@ if (HAL_I2C_Mem_Write(&hi2c, uint16_t DevAddress, MemAddress, MemAddSize, &pData
 **薄膜晶体管液晶显示器**
 型号: `NT5510`
 resolution: `800*480`
+- `x_max = 480 - 1;`
+- `y_max = 800 - 1;`
+
 **LCD Register Select** = RS pin
 
-
+**FSMC**/Mode/NOR 1 
+NE4,LCD Interface,A10,16 bits
+GPIO/PB0:LCD_BL
 ### MPU6050
 #### MPU6050 i2c address: `0xD0`
 
