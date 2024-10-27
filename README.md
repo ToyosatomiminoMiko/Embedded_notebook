@@ -376,6 +376,10 @@ uint32_t HAL_CRC_Calculate(CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t
 |   7   |   6   |   5   |   4   |   3   |   2   |   1   |  R/W  |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 |   0   |   1   |   1   |   1   |   1   |   0   |   0   |  1/0  |
+#### 提高帧率
+设置I2C快速模式
+**Master Features**/
+**I2C Speed Mode: Fast Mode**
 
 ### VFD:CIG25-1605N
 
@@ -431,7 +435,7 @@ void MOSI_Byte(uint8_t byte)
 #### `SDIO_CMD`
 SDIO的所有命令和响应都是通过`SDIO_CMD`引脚传输的,任何命令的长度都是固定为**48**位.
 
-SDIO 的命令格式:
+SDIO command report:
 <table border="1">
     <thead align="center">
         <tr>
@@ -619,6 +623,9 @@ sprintf(s_time, "%02d:%02d:%02d", time.Hours, time.Minutes, time.Seconds);
 hex:
 `59` = `0x3b`
 `23` = `0x17`
+`31` = `0x1F`
+`99` = `0x63`
 
-
+### ST7302
+*「昏睡レイプ！野獣と化した先輩」*
 
