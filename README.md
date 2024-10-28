@@ -111,14 +111,25 @@
 - 位识别方式: 差分信号 波特率
 
 
-## § HAL常用函数
-#### 针脚写入
+## § 外设与 HAL 库
+
+### C 整数类型
+|       type       |  size  |          range           |
+| :--------------: | :----: | :----------------------: |
+| `unsigned char`  | 1 Byte |         [0,255]          |
+|  `signed char`   | 1 Byte |        [-128,127]        |
+| `unsigned short` | 2 Byte |        [0,65535]         |
+|  `signed short`  | 2 Byte |      [-32768,32767]      |
+|  `unsigned int`  | 4 Byte |      [0,4294967295]      |
+|   `signed int`   | 4 Byte | [-2147483648,2147483647] |
+
+#### GPIO写入
 ```c
 void HAL_GPIO_WritePin(GPIOx, GPIO_Pin_x, GPIO_PIN_SET);
 //high:   GPIO_PIN_SET
 //low:    GPIO_PIN_RESET
 ```
-#### 针脚读取
+#### GPIO读取
 ```c
 GPIO_PinState HAL_GPIO_ReadPin(GPIOx, GPIO_Pin_x);
 ```
@@ -179,8 +190,8 @@ while (1) {
     i++;
 }
 ```
-*The Regents of the University of California.*
-加州大学董事会
+> Sample text: *The Regents of the University of California.*
+(加州大学董事会)
 
 *temperature* 温度
 
@@ -229,15 +240,29 @@ if (HAL_I2C_Mem_Write(&hi2c, uint16_t DevAddress, MemAddress, MemAddSize, &pData
 *Thin film transistor liquid crystal display*
 **薄膜晶体管液晶显示器**
 型号: `NT5510`
+触控: `GT917S`
 resolution: `800*480`
 - `x_max = 480 - 1;`
 - `y_max = 800 - 1;`
 
-**LCD Register Select** = RS pin
+#### TFT-LCD: FSMC Mode and Configuration
+- **FSMC**/Mode/NOR 1 
+- **Chip Select**: `FSMC_NE4`;
+- **Memory type**: "LCD Interface";
+- **LCD Rigster Select**: `FSMC_A10`(`RS`pin);
+- **Data**: "16 bits"
+- **GPIO**: "PB0->`LCD_BL`(`GPIO_PIN_SET`);
+- **RESET**: auto, 开发板电路已连接
 
-**FSMC**/Mode/NOR 1 
-NE4,LCD Interface,A10,16 bits
-GPIO/PB0:LCD_BL
+#### lcd函数
+初始化函数
+```c
+// 定义
+void lcd_init(void);
+// 调用
+lcd_init();
+```
+
 ### MPU6050
 #### MPU6050 i2c address: `0xD0`
 
@@ -428,9 +453,10 @@ void MOSI_Byte(uint8_t byte)
 	}
 }
 ```
-*Democratic Republic of North Japan*
-*Шойгу! Герасимов! где сука боеприпасы?*
-*Shoigu gerasimov gdie suka boiepripacy*
+> Sample text: 
+> *Democratic Republic of North Japan*
+> *Шойгу! Герасимов! где сука боеприпасы?*
+> *Shoigu gerasimov gdie suka boiepripacy*
 ### SDIO
 #### `SDIO_CMD`
 SDIO的所有命令和响应都是通过`SDIO_CMD`引脚传输的,任何命令的长度都是固定为**48**位.
@@ -491,17 +517,18 @@ hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
 hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_ENABLE;
 hsd.Init.ClockDiv = 0x06;
 ```
-其中 `hsd.Init.BusWide` 在初始化时必须保持 1 位宽(`SDIO_BUS_WIDE_1B`)
-
-位宽可在初始化完成后修改
-```c
-/* USER CODE BEGIN SDIO_Init 2 */
-if (HAL_SD_ConfigWideBusOperation(&hsd, SDIO_BUS_WIDE_4B) != HAL_OK)
-{
+- `hsd.Init.BusWide` 在初始化时必须保持 1 位宽(`SDIO_BUS_WIDE_1B`)
+    位宽可在初始化完成后修改
+    ```c
+    /* USER CODE BEGIN SDIO_Init 2 */
+    if (HAL_SD_ConfigWideBusOperation(&hsd, SDIO_BUS_WIDE_4B) != HAL_OK)
+    {
     Error_Handler();
-}
-/* USER CODE END SDIO_Init 2 */
-```
+    }
+    /* USER CODE END SDIO_Init 2 */
+    ```
+- `hsd.Init.ClockDiv`公式:*CLKDIV*
+    $$ SDIO\_CK =\frac{SDIOCLK}{(2 + CLKDIV)} $$
 SD卡基本信息:
 ```
 LCD_ID: 5510
@@ -589,11 +616,16 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 2. 第二个字节表示x轴(即鼠标左右移动,0表示不动,正值表示往右移,负值表示往左移,范围-127-127,绝对值对应了移动量大小);
 3. 第三个字节表示y轴(即鼠标上下移动,0表示不动,正值表示往下移,负值表示往上移,范围-127-127,绝对值对应了移动量大小);
 4. 第四个字节表示鼠标滚轮(正值为往上滚动,负值为往下滚动,-127-127,绝对值对应了移动量大小).
+5. 设置完成后将报文发送
+    ```c
+    USBD_HID_SendReport(&hUsbDeviceFS, HID_buf, 4);
+    ```
+
 ### CAN
 收发芯片: `JTA1050`
 
 ### RTC
-#### RTC
+#### RTC configuration
 1. **Timers** ->
 2. **RTC** ->
 3. **Mode** ->
@@ -627,5 +659,33 @@ hex:
 `99` = `0x63`
 
 ### ST7302
-*「昏睡レイプ！野獣と化した先輩」*
 
+> Sample text:
+> *「昏睡レイプ！野獣と化した先輩」*
+
+### Memory Management
+
+内存池:
+
+内存管理表:
+内存管理表的每一个项对应内存池的一块内存
+内存管理表的项值:
+- 当该项值为 0 的时候,代表对应的内存块未被占用
+- 当该项值非零的时候,代表该项对应的内存块已经被占用,其数值则代表被连续占用的内存块数
+```c
+/*
+定义
+memx: 
+SRAMIN 内部 SRAM (64 kB);
+SRAMEX 外部扩展 SRAM (本开发板不支持);
+*/
+void my_mem_init(uint8_t memx);
+// 调用
+my_mem_init(SRAMIN);
+```
+
+### 示波器
+oscillo-meter
+oscillo-graph
+oscillo-scope
+示波器的本质: ADC(电压表)+屏幕
