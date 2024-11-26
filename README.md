@@ -414,24 +414,35 @@ lcd_init();
 画线清除之前的点
 
 ```c
-uint8_t d = 0;
-// O-point (原点)
-const uint8_t Ox = 120, Oy = 160;
-// target point
-int8_t Px = 0, Py = 0;
 while (1)
 {
     if (d <= 0)
         d = 200;
-    Py = sin((d - 1) * U_PI) * (double) 101;
-    Px = cos((d - 1) * U_PI) * (double) 101;
-    Ty = sin(d * U_PI) * (double) sr04_length;
-    Tx = cos(d * U_PI) * (double) sr04_length;
-    lcd_draw_line(Ox, Oy, Ox - Px, Oy - Py, WHITE);
-    lcd_draw_point(Ox - Tx, Oy - Ty, GREEN);
-    HAL_Delay(25);
-    lcd_draw_line(Ox, Oy, Ox - Px, Oy - Py, BLACK);
-    d--;
+    line_y = sin((d - 1) * 1.8 * PI / 180) * (double) 101;
+    line_x = cos((d - 1) * 1.8 * PI / 180) * (double) 101;
+    lcd_draw_line(Ox, Oy, Ox - line_x, Oy - line_y, WHITE);
+    HAL_UART_Receive(&huart2, receive_buffer, sizeof(receive_buffer), 0xFF);
+    for (uint8_t i = 0; i < sizeof(receive_buffer); i++)
+    {
+        if (receive_buffer[i] == 'd' && receive_buffer[i + 1] == ':')
+        {
+            sprintf(s, "%c%c%c%c", receive_buffer[i + 2],
+                    receive_buffer[i + 3], receive_buffer[i + 4],
+                    receive_buffer[i + 5]);
+            length = atoi(s);
+            if (length > 2000)
+                length = 2000;
+            length = length / 20;
+            point_y = sin(d * 1.8 * PI / 180) * (double) length;
+            point_x = cos(d * 1.8 * PI / 180) * (double) length;
+            lcd_draw_point(Ox - point_x, Oy - point_y, GREEN);
+            d--;
+            lcd_draw_line(Ox, Oy, Ox - line_x, Oy - line_y, BLACK);
+            //sprintf(s0, "%d\r\n", length);
+            //HAL_UART_Transmit(&huart1, (uint8_t*) s0, sizeof(s0), 0xFF);
+
+        }
+    }
 }
 ```
 
@@ -601,6 +612,36 @@ uint32_t HAL_CRC_Calculate(CRC_HandleTypeDef *hcrc, uint32_t pBuffer[], uint32_t
 8 bit *128* 8
 `1024 Byte`
 
+1Byte 对应像素的结构
+<table border="1">
+    <tbody>
+        <tr>
+            <td><code>7</code></td>
+        </tr>
+        <tr>
+            <td><code>6</code></td>
+        </tr>
+        <tr>
+            <td><code>5</code></td>
+        </tr>
+        <tr>
+            <td><code>4</code></td>
+        </tr>
+        <tr>
+            <td><code>3</code></td>
+        </tr>
+        <tr>
+            <td><code>2</code></td>
+        </tr>
+        <tr>
+            <td><code>1</code></td>
+        </tr>
+        <tr>
+            <td><code>0</code></td>
+        </tr>
+    </tbody>
+</table>
+
 #### SSD1306 i2c address: `0x78`
 
 |   7   |   6   |   5   |   4   |   3   |   2   |   1   |  R/W  |
@@ -664,11 +705,13 @@ void MOSI_Byte(uint8_t byte)
 }
 ```
 
-> Sample text:
-> *Democratic Republic of North Japan*
-> *Шойгу! Герасимов! где сука боеприпасы?*
-> *Shoigu gerasimov gdie suka boiepripacy*
->
+- Sample text:
+    > *Democratic Republic of North Japan*
+    >
+    > *Шойгу! Герасимов! где сука боеприпасы?*
+    >
+    > *Shoigu gerasimov gdie suka boiepripacy*
+
 ### SDIO
 
 #### `SDIO_CMD`
@@ -902,8 +945,46 @@ hex:
 
 ### ST7302
 
+- resolution: 250*122
+
+125 * 0x21 = 4125
+1Byte 对应像素的结构
+
+<table border="1">
+    <tbody>
+        <tr>
+            <td><code>7</code></td>
+            <td><code>6</code></td>
+        </tr>
+        <tr>
+            <td><code>5</code></td>
+            <td><code>4</code></td>
+        </tr>
+        <tr>
+            <td><code>3</code></td>
+            <td><code>2</code></td>
+        </tr>
+        <tr>
+            <td><code>1</code></td>
+            <td><code>0</code></td>
+        </tr>
+    </tbody>
+</table>
+
+31 * 4 = 124
+最后两行在屏幕外面
+
 - Sample text:
     >*「昏睡レイプ！野獣と化した先輩」*
+
+- `CS`: low enable
+
+### GC9A01
+
+HSB first
+
+- resolution: 240*240
+圆形屏幕
 
 ### Memory Management
 
@@ -1056,6 +1137,12 @@ V: 音速(speed of sound)
 *Nixie tube*
 辉光管
 
-# 1
+# Turing Completa
 
+## Assembly
+
+- `0b00`: Immediate 立即数
+- `0b01`: Compute 计算
+- `0b10`: Copy 复制
+- `0b11`: Condition 条件
 *Internet Software Infrastructure*
