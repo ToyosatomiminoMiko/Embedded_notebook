@@ -184,7 +184,7 @@ default:
 
 ### C 整数类型
 
-|       type       |  size  |          range           |
+|       type       |  size  |     range(integer`Z`)    |
 | :--------------: | :----: | :----------------------: |
 | `unsigned char`  | 1 Byte |         [0,255]          |
 |  `signed char`   | 1 Byte |        [-128,127]        |
