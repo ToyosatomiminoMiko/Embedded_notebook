@@ -1203,28 +1203,42 @@ NAND, NOR
 
 ### 存储技术
 
-#### ROM
+**非易失性存储器**: 断电后数据不会丢失.ROM家族和Flash都属于此类.
+**易失性存储器**: 断电后数据立即丢失.SRAM和DRAM属于此类.
+
+#### 非易失性存储器(NVM)
+
+NVM *Non-Volatile Memory*
 
 - ROM
-无法写入
+*Read-Only Memory*
+在芯片制造时,通过掩膜工艺将数据"刻"在电路里.一旦生产完成,数据永久固定,无法修改
 - PROM
-一次写入,不可擦除
+*Programmable ROM*
+出厂时为全"1"(或全"0").用户使用专用的编程器,通过高电压将内部的熔丝烧断,从而将某些位写为"0"(或"1").一次性编程.
 - EPROM
-*Erasable Programmable Read-Only Memory*
-紫外线擦除
+*Erasable Programmable ROM*
+利用浮栅晶体管存储电荷.编程时用高电压注入电荷,擦除时需要紫外线照射芯片上的石英窗口约20分钟,使电荷获得能量逃逸,从而擦除整个芯片
 - EEPROM
-*Electrically Erasable Programmable read only memory*
-电擦除
-- NOR Flash
-晶体管并联结构,读取速度快,支持字节级的随机读取,可以直接在芯片上运行代码.但密度低,成本高,写入速度慢.主要用于存储关键程序代码,如主板BIOS,路由器固件,嵌入式系统启动代码等.
-- NAND Flash
-晶体管串联结构,密度高,写入和擦除速度快,成本低,但只能按"块"或"页"进行随机读取（类似硬盘）.主要用于大容量数据存储,如SSD,U盘,手机,相机存储卡等.
+*Electrically Erasable Programmable ROM*
+同样是浮栅晶体管,但结构更精细,允许用电信号进行擦除和写入.关键是可以按字节进行擦写
+- Flash
+可看作是EEPROM的升级
+  - NOR Flash
+  晶体管并联结构,读取速度快,支持字节级的随机读取,可以直接在芯片上运行代码.但密度低,成本高,按"块"擦除,写入速度慢.主要用于存储关键程序代码,如主板BIOS,路由器固件,嵌入式系统启动代码等.
+  - NAND Flash
+  晶体管串联结构,密度高,写入和擦除速度快,成本低,但只能按"块"或"页"进行随机读取(类似硬盘).主要用于大容量数据存储,如SSD,U盘,手机,相机存储卡等.
 
-#### RAM
+#### 易失性存储器
+
+*Volatile Memory*
+随机存储器(RAM*Random Access Memory*)
 
 - DRAM
+*Dynamic RAM*
 电容存储 动态刷新 内存
 - SRAM
+*Static RAM*
 门电路
 CPU L1,L2缓存
 
