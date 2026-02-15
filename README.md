@@ -1257,19 +1257,23 @@ NVM,*Non-Volatile Memory*
 - DRAM
 *Dynamic RAM*
 电容存储 动态刷新 内存
+
+双倍数据速率(DDR,double data rate)
+上升沿下降沿传输
+
 - SRAM
 *Static RAM*
-门电路
-CPU L1,L2缓存
+逻辑门电路 不需要刷新
+CPU Register(触发器) & L1,L2 cache(6晶体管)
 
 #### 排位
 
 按速度划分:
 
-1. Register
+1. Register (Flip-Flops)
 2. L1,L2 Cache (SRAM)
 3. memory (DRAM)
-4. SSD (Solid State Disk) (Flash) (EEPROM)
+4. SSD (Solid State Disk) (NAND Flash) (EEPROM)
 5. HDD (Hard Disk Drive)
 
 ## Turing Completa
