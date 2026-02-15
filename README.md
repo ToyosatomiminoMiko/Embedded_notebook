@@ -1228,7 +1228,7 @@ NAND, NOR
 
 #### 非易失性存储器(NVM)
 
-NVM *Non-Volatile Memory*
+NVM,*Non-Volatile Memory*
 
 - ROM
 *Read-Only Memory*
@@ -1252,7 +1252,7 @@ NVM *Non-Volatile Memory*
 #### 易失性存储器
 
 *Volatile Memory*
-随机存储器(RAM*Random Access Memory*)
+随机存储器(RAM,*Random Access Memory*)
 
 - DRAM
 *Dynamic RAM*
